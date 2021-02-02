@@ -3,11 +3,11 @@
 
 ## JS原生
 
--  [N30.1 组合模式.md](N30.1 组合模式.md) 
+-   [N30.1 组合模式.md](N30.1 组合模式.md) 
 
     > js原生课程笔记(1)
 
--  [46 class语法.md](46 class语法.md) 
+-   [46 class语法.md](46 class语法.md) 
 
     > js原生课程笔记(2)
 
@@ -39,7 +39,7 @@
 
 ## CSS
 
-- [N CSS.md](N CSS.md) 
+-  [N CSS.md](N CSS.md) 
 
   > CSS的一些插件的使用,BFC问题,canvas动画
 
