@@ -32,6 +32,10 @@
 -  [typescript.md](typescript.md) 
 
    > typescript基本安装及其使用.基本数据类型介绍及其原理
+   
+-   [数据库.md](数据库.md) 
+
+    > 关系型数据库与非关系型数据库,mongodb的使用
 
 ## CSS
 
@@ -43,7 +47,7 @@
 
 - [http.md](http.md) 
 
-  > http的基础知识
+  > http的基础知识,以及http性能优化
 
 ## 其他 
 
