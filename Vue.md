@@ -619,6 +619,26 @@ vm.$el //绑定他的标签
     </script>
 ```
 
+### 生命周期
+
+1.created（数据种类）的数据执行好了，但是template标签模板还未被编译（beforeMount）（元素种类），再编译render函数。
+
+2.所以mounted就是数据与元素的结合。
+
+3.改变数据的时候,生命周期执行beforeUpdate和updated,而且在beforeUpdate的时候，数据已经完成了更新，只是没有渲染到屏幕上。
+
+4.在beforeUpdate的时候，统一数据更新，在updated的时候再统一显示到屏幕上。
+
+5.destoryed和beforeDestory没有基本变化。
+
+**6.切换组件的话**
+
+beforeCreate=>created=>beforeMount=>beforeDestroy=>destroyed=>mounted
+
+至少要把第二个准备好再清掉第一个。不能让用户看空白页面。
+
+7.二次更新的话就是beforeUpdate=>updated
+
 ### 2.props父组件传到子组件的数据
 
 ```js
@@ -920,6 +940,64 @@ npm init -y
 ```
 
 ```
-npm install webpack webpack-cli
+npm install webpack webpack-cli --save-dev
 ```
 
+2.引入vue项目
+
+你应该将 `vue-loader` 和 `vue-template-compiler` 一起安装——除非你是使用自行 fork 版本的 Vue 模板编译器的高阶用户：
+
+```bash
+npm install -D vue-loader vue-template-compiler	-D
+```
+
+3.创建webpack.config.js
+
+```js
+let path=require("path");
+
+
+module.exports={
+    mode: 'development' ,
+    entry:path.resolve(__dirname,"./src/entry.js" ), //入口
+    output:{        //出口
+        path:path.resolve(__dirname,"bundle" )
+       },
+     module:{
+         rules:[
+             {
+                test: /\.vue$/,
+                loader: 'vue-loader'
+             }
+         ]
+     }
+}
+```
+
+一个vue 的module
+
+4.创建src文件夹,在src下创建assets，components，以及app.vue，entry.js
+
+5.要用js文件来导入和引用,
+
+安装rules
+
+```
+ postcss-loader@4.1.0
++ style-loader@2.0.0
++ file-loader@6.2.0
++ css-loader@5.0.1
++ autoprefixer@10.2.1
+babel-loader@8.2.2
++ @babel/preset-env@7.12.11
++ @babel/polyfill@7.12.1
++ @babel/core@7.12.10xxxxxxxxxx  postcss-loader@4.1.0+ style-loader@2.0.0+ file-loader@6.2.0+ css-loader@5.0.1+ autoprefixer@10.2.1+ @babel/preset-env@7.12.11+ @babel/polyfill@7.12.1+ @babel/core@7.12.10npm install vue-loader babel-loader vue-style-loader css-loader -D
+```
+
+6.
+
+```
+npm install html-webpack-plugin -D
+```
+
+7.node用require,js用import

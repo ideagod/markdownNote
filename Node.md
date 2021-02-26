@@ -110,3 +110,29 @@ module.exports={add}
 
 # 
 
+# express
+
+## 中间件（像proxy代理） app.use
+
+数据的流入、流出 =>中间件=>最终业务
+用处：
+
+先做一些基本处理，发送数据前做一些基本配置。
+
+静态资源配置工作
+
+express内容分类
+
+```
+express()
+	.json
+	.static
+	.Router
+	.irlencoded
+Application
+	Properites
+	Events
+	Methods
+	
+```
+

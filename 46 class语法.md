@@ -1296,7 +1296,7 @@ for循环就是个同步
 ## 53.3 Promise对象
 
 ```js
-const promise=new Permise(function (resolve,reject){
+const promise=new Promise(function (resolve,reject){
     if(成功){
         resolve(value);
     }else{
