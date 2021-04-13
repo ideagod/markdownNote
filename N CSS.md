@@ -312,3 +312,4 @@ user-scalable=no	不允许缩放
   canCon.fill();   //落笔
 ```
 
+​    background-image: linear-gradient(to bottom, #f5b461 0%, #9ad3bc 100%);

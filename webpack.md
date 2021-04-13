@@ -225,6 +225,26 @@ npx webpack
 
 # 2.loader
 
+**loader到底做了什么？**
+由于webpack是基于Node的所以webpack只能识别.js文件，所以针对其他的文件就需要转译，这时候就需要用到我们的loader了。
+
+loader是文件加载器，能够加载资源文件，并对这些文件进行特定的处理，然后打包的指定文件中，简单来说就是将webpack传入的字符串做出特定的处理修改。
+
+比如：A.less -> A.css。
+
+**loader特点**
+loader的执行顺序和代码书写的顺序是相反的，即：最后一个loader最先执行，第一个loader最后执行
+第一个执行的loader会接收源文件做为参数，下一次执行的loader会接收前一个loader执行的返回值做为参数
+
+（从右到左，从下到上
+
+**loader编写原则**
+单一原则: 每个 Loader 只做一件事；
+链式调用: Webpack 会按顺序链式调用每个 Loader；
+统一原则: 遵循 Webpack 制定的设计规则和结构，输入与输出均为字符串，各个 Loader 完全独立，即插即用；
+
+loader 其实就是一个函数，函数的参数是处理文件的文件内容，参数类型是字符串。这个函数还有一个 pitch 方法，同样也有一个参数，是字符串形式的剩余参数，这个剩余参数中有当前loader之后还没有执行的loader的所在的绝对路径。
+
 ## 1.file-loader引入文件
 
 1.index.js里
