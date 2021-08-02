@@ -60,7 +60,15 @@ death(ele1,ele2);
 
 意思是：父元素形成BFC，子元素会撑开父元素的高度
 
+形成BFC：
 
+​	  1.float元素。
+
+　　2.position不是static，relative。
+
+　　3.display为inline-block, table-cell, table-caption，flex和inline-flex。
+
+　　4.overflow不为visiable。
 
 ## 伪元素
 
@@ -213,6 +221,359 @@ div:hover{
 }
 ```
 
+## animation圆环进度条
+
+```html
+<div id="progressBar">
+      <!-- 进度条 -->
+      <div>
+        <span></span>
+      </div>
+      <!-- 五个圆 -->
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+ </div>
+```
+
+```css
+	/* 元素大小宽度 */
+#progressBar{
+            width: 80%;
+            height: 50px;
+            position: relative;
+            margin: 50px 0 0 100px;
+        }
+	/*  条纹边框，底色 */
+        #progressBar div{
+            width: 100%;
+            height: 10px;
+            position: absolute;
+            top:50%;
+            left: 0;
+            margin-top:-20px;
+            background: #ccc;
+        }
+	/* 进度条颜色 */
+        #progressBar div span{
+            position: absolute;
+            display: inline-block;
+            background: green;
+            height: 10px;
+            width: 100%;
+            -webkit-animation:bgLoad 5.5s linear;
+        }
+			/* 每动到每个原点停止 停顿的时候 */
+        @-webkit-keyframes bgLoad{
+            0%{
+                width: 0%;
+            }
+            18.18%,27.27%{
+                width:25%;
+            }
+            45.45%,54.54%{
+                width: 50%;
+            }
+            72.72%,81.81%{
+                width: 75%;
+            }
+            100%{
+                width:100%;
+            }
+        }	
+		/* 圆球大小颜色 */
+        #progressBar>span{
+            position: absolute;
+            top:0;
+            margin-top: -10px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ccc;
+            margin-left: -20px;
+            color:#fff;
+        }
+/* 圆球变色 */
+        @-webkit-keyframes circleLoad_1{
+            0%,66.66%{
+                background: #ccc;
+            }
+            100%{
+                background:green;
+            }
+        }
+        @-webkit-keyframes circleLoad_2{
+            0%,83.34%{
+                background: #ccc;
+            }
+            100%{
+                background:green;
+            }
+        }
+        @-webkit-keyframes circleLoad_3{
+            0%,88.88%{
+                background: #ccc;
+            }
+            100%{
+                background:green;
+            }
+        }
+        @-webkit-keyframes circleLoad_4{
+            0%,91.67%{
+                background: #ccc;
+            }
+            100%{
+                background:green;
+            }
+        }
+	/* 圆球位置 */
+        #progressBar span:nth-child(2){
+            left: 0%;background:green;
+        }
+        #progressBar span:nth-child(3){
+            left: 25%;background:green;
+            -webkit-animation:circleLoad_1 1.5s ease-in;
+        }
+        #progressBar span:nth-child(4){
+            left: 50%;background:green;
+            -webkit-animation:circleLoad_2 3s ease-in;
+        }
+        #progressBar span:nth-child(5){
+            left: 75%;background:green;
+            -webkit-animation:circleLoad_3 4.5s ease-in;
+        }
+        #progressBar span:nth-child(6){
+            left: 100%;background:green;
+            -webkit-animation:circleLoad_4 6s ease-in;
+        }
+```
+
+可以看到，其实对于动画本身是很简单的，一看就明白了，**主要就是动画持续时间的计算**，由于这个动画效果只执行一次，所以其实也可以用动画延迟时间来保证各个动画在指定的时间点开始执行，但是对于循环或者多次动画效果，延迟很不灵活，所以这里还是用持续时间的长短来控制动画的执行时间。
+
+这个订单进度条，我是设置了走一段用时1秒，然后每到一个圆点就停顿0.5秒，而这0.5秒就是相对应的圆点的动画持续执行时间。但是**再次强调这个是单次动画**，如果想实现循环动画，还是得做调整的，必须让所有动画的持续执行时间是一样的，不然循环起来就错乱的。而时间的改动也会影响动画关键帧的改动，**下面对第一小段和第二个圆的动画时间讲解一下**：
+
+首先，细长条的动画持续时间通过计算：
+
+4小段x1秒 + 中间3个圆点 x 0.5秒 = 5.5秒
+
+接下来就是计算细长条动画关键帧的时间分配，设每一份0.5秒，那么共总就是11份，每小段得2份，每个圆点得1份，用100%除以11，可得每份大约是9.09%，接下来就是分配时间了，这个就简单了，不多说。
+
+接着，当细长条完成第一小段的动画效果到达第二个圆点时，会停顿0.5秒，而这0.5秒就是第二个圆点的动画时间，所以第二个圆点的动画持续时间就是：
+
+等待细长条执行完1小段 x１秒＋自身的动画完成时间ｘ０.５秒＝１.５秒
+
+同样的方法计算每一份的时间然后进行分配。**同理，其他动画效果相似，就不再赘述了。**
+
+### 点击触发圆环进度条
+
+想弄成点击后再触发动画，使用了vue组件，然后
+
+```html
+		<style>
+			/* 元素大小宽度 */
+			.down {}
+			/*  条纹边框，底色 */
+			.down div {}
+			/* 圆球大小颜色 */
+			.down>span {}
+			
+			/* 圆球位置 */
+			.down span:nth-child(2) {
+				left: 0%;
+			}
+			
+			.down span:nth-child(3) {
+				left: 25%;
+			}
+			
+			.down span:nth-child(4) {
+				left: 50%;
+			}
+			
+			.down span:nth-child(5) {
+				left: 75%;
+			}
+			
+			.down span:nth-child(6) {
+				left: 100%;
+			}
+			/* ------------- */
+			/* 元素大小宽度 */
+			.progress {}
+
+			/*  条纹边框，底色 */
+			.progress div {}
+
+			/* 进度条颜色 */
+			.progress div span {}
+
+			/* 每动到每个原点停止 停顿的时候 */
+			@-webkit-keyframes bgLoad {
+				0%,
+				16.66% {
+					width: 0%;
+				}
+				24.99%,
+				41.65% {
+					width: 25%;
+				}
+
+				49.98%,
+				66.64% {
+					width: 50%;
+				}
+
+				74.97%,
+				91.63% {
+					width: 75%;
+				}
+				100% {
+					width: 100%;
+				}
+			}
+
+			/* 圆球大小颜色 */
+			.progress>span {}
+
+			/* 圆球位置 */
+			.progress span:nth-child(2) {
+				left: 0%;
+				background: green;
+				-webkit-animation: circleLoad_0 2s ease-in;
+			}
+
+			.progress span:nth-child(3) {
+				left: 25%;
+				background: green;
+				-webkit-animation: circleLoad_1 3s ease-in;
+			}
+
+			.progress span:nth-child(4) {
+				left: 50%;
+				background: green;
+				-webkit-animation: circleLoad_2 6s ease-in;
+			}
+
+			.progress span:nth-child(5) {
+				left: 75%;
+				background: green;
+				-webkit-animation: circleLoad_3 9s ease-in;
+			}
+
+			.progress span:nth-child(6) {
+				left: 100%;
+				background:green;
+				-webkit-animation: circleLoad_4 12s ease-in;
+			}
+
+			/* 圆球变色 */
+			@-webkit-keyframes circleLoad_0 {
+				0% {
+					background: #ccc;
+				}
+
+				100% {
+					background: green;
+				}
+			}
+
+			@-webkit-keyframes circleLoad_1 {
+
+				0%,
+				83.88% {
+					background: #ccc;
+				}
+
+				100% {
+					background: green;
+				}
+			}
+
+			@-webkit-keyframes circleLoad_2 {
+
+				0%,
+				88.88% {
+					background: #ccc;
+				}
+
+				100% {
+					background: green;
+				}
+			}
+
+			@-webkit-keyframes circleLoad_3 {
+
+				0%,
+				88.88% {
+					background: #ccc;
+				}
+
+				100% {
+					background: green;
+				}
+			}
+
+			@-webkit-keyframes circleLoad_4 {
+
+				0%,
+				91.67% {
+					background: #ccc;
+				}
+
+				100% {
+					background: green;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div id="progressBar">
+
+			<!-- 进度条 -->
+			<div v-bind:class="{progress:progress,down:down}">
+				<div>
+					<span></span>
+				</div>
+				<!-- 五个圆 -->
+				<span></span>
+				<span></span>
+				<span></span>
+				<span></span>
+				<span></span>
+			</div>
+			<button @click="showProgress">click</button>
+		</div>
+
+	</body>
+
+	<script>
+		new Vue({
+			el: '#progressBar',
+			data: {
+				down:true,
+				progress:false
+			},
+			methods:{
+				showProgress(){
+					this.down=false
+					this.progress=true
+					// this.down=!this.down
+				}
+			}
+		})
+	</script>
+```
+
+首先设置了v-bind绑定两个不同的class在一个标签里，然后data数据在里面，通过每次点击后改变data数据的值去展示不同的class类。
+
+其实感觉和v-if是否显示很像，都是为false时不显示，true时就显示。
+
+查询来源：runoob。
+
+其实有看见transition来控制是否发生动画，感觉优化的时候要根据transition看。
+
 ## 变化样式 transform
 
 ```css
@@ -227,7 +588,6 @@ div:hover{
     transform-origin:50% 50%;默认		    	变化原点（可以px（在元素的哪里 ex：0,0的话就是左上角
     
 }
-
 ```
 
 1.不会对兄弟元素等其他元素产生影响。宽高值不会变（只是视觉变化了而已

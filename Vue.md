@@ -82,6 +82,8 @@ let son={
 
 ## 19.3 父子组件传值
 
+非父子4.5
+
 子组件的data必须是一个函数,返回一个对象
 
 ```js
@@ -91,6 +93,34 @@ data(){
     }
 }
 ```
+
+### 组件细节
+
+#### 1.is属性
+
+是这个template
+
+```html
+<table>
+    <tr is ="row"></tr>
+</table>
+
+Vue.component('row',{
+	template:'<tr><td>this is a row</td></tr>'
+})
+```
+
+#### 2.ref
+
+```js
+<div ref="hello"></div>
+this.$refs.hello		//本身的元素（若不是组件的话）
+
+<template ref="temp"></template>
+this.$refs.temp			//获取到组件的引用
+```
+
+
 
 ### 父组件向子组件传值:
 
@@ -113,12 +143,12 @@ props:{			//想对传进来的进行过滤
 ### 子组件向父组件传值:
 
 ```js
-<son @xxx='x'></son>
+<son @xxx='x'></son>		//左边是子，右边是父
 
 子组件
 methods:{
     handleClick(){
-        this.$emit('xxx',this.name);	//向父组件发射xxx事件
+        this.$emit('xxx',this.name);	//向父组件发射xxx事件 ,后面可以带多个参数
     }
 }
 
@@ -426,6 +456,34 @@ v-model
  v-slot:default       #defasult
 ```
 
+#### 作用域插槽
+
+使用场景：子组件做循环或者某一部分的dom结构应该由外部传进来的时候，dom操作，样式都由父组件来。
+
+```js
+			<child>
+				<template slot-scope="props">			<!-- 一定要有template占位符 -->
+					<li>{{props.item}}</li>
+				</template>
+			</child>
+
+
+			Vue.component('child', {					
+				data:function(){
+					return{
+						list:[1,2,3,4]
+					}
+				},
+				template: `<div>
+					<ul>
+						<slot v-for="item of list" :item=item></slot>
+					</ul>
+				</div>`
+			})
+```
+
+
+
 ### 5.选项卡案例
 
 #### 全局选项卡案例
@@ -517,12 +575,33 @@ v-model
 
 # 23 vue 的动画效果
 
+```css
+.fade-enter{
+
+}
+.fade-enter-active{}
+.fade-leave-to{}
+
+
+<transition name="fade">
+	<div>hello world</div>
+</transition>
+```
+
+transition 内使用v-if和v-show都可以
+
+animated.css	直接用动画库
+
+1.自定义class形式
+
+2.class里面必须包含animated这个类，根据入场和出场不同设置
+
 ## 23.1单元素/组件的过渡
 
 1.触发式
 
 ```css
-  /* name的值来替换v*/
+  /* name的值来替换 v */
 v-enter-active	元素从消失到显示出来后,并且动画完成	0->1
 v-enter				显示前					    0
 v-enter-to			显示后的					1
@@ -562,6 +641,13 @@ v-leave-to			消失后	 					0
          transform:scale(1);
     }
 }
+
+.enter{
+    animation:bounce-in 1s reverse;
+    transform-origin:left center;
+}
+<transition enter-active-class="active">	//可以自定义名字
+</transition>
 ```
 
 3.使用外带动画
@@ -569,7 +655,7 @@ v-leave-to			消失后	 					0
 ```html
 <link rel="stylesheet" type="text/css" href="src/animate.css"/>
 
-<transition name="fade" 
+<transition name="fade" <!-- 可以自定义 -->
             <!-- 可以避免更改css新出的 -->
          	enter-active-class="animated"   
             enter-leave-class="animated"
@@ -578,20 +664,133 @@ v-leave-to			消失后	 					0
 
 ## 23.2多元素/组件的过渡
 
+##### 1.多元素的过渡
+
 ```html
 <transition name="fade"  enter-active-class="animated"    enter-leave-class="animated"
           <!-- 重叠解决方案 --> 
-            mode="out-in"				<!-- out-in 当前元素先消失,后面元素再进来  in-out--> 
-            >
-   <!--写法1 if else 本质是同一个元素 -->
+    mode="out-in"		<!-- out-in 当前元素先消失,后面元素再进来  in-out--> >
+
+   <!--写法1 if else 本质是同一个元素	vue会复用 -->
 	<p v-if="show" key="one">		    <!-- 使用不同的key来区分是同一元素不同需求 -->
   		{{msg}}  
 	</p>
 	<p v-else key="two">{{msg+"2"}}</p>
  	<!--写法2 -->
 	<p v-bind:key="show">{{show?msg:"hello world"}}</p>
+
 </transition>
 ```
+
+##### 2.组件间的过渡
+
+```html
+<transition>
+    <component :is="type"></component>
+</transition>
+<script>
+	Vue.component('child',{
+        template:'<div>child</div>'
+    })
+    Vue.component('child-one',{
+        template:'<div>child-one</div>'
+    })
+    var vm=new Vue({
+        el:'#root',
+        data:{
+            type:'child'
+        },
+        methods:{
+            handleClick(){
+                this.type=this.type ==='child'?'child-one':'child'
+            }
+        }
+    })
+</script>
+```
+
+##### 3.vue中的列表过渡
+
+```html
+<tansition-group >		//等于每个div外面都包裹着transition
+    <div v-for="item of list" :key="item.id">
+        {{item.title}}
+    </div>
+</tansition-group>
+
+.v-enter,v-leave-to{
+	opacity:0;
+}
+v-enter-active,.v-leave-active{
+	transition:opacity 1s;
+}
+```
+
+##### 4.动画封装
+
+```html
+<fade :show="show">
+    <div>hello world</div>
+</fade>
+
+<fade :show="show">
+    <h1>hello world</h1>	//仅改变这里的内容既可
+</fade>
+
+<script>
+    //可以完整的把一个动画的实现封装在一个组件里面
+    Vue.component('fade',{
+    props:['show'],
+    template:`<transition @before-enter="handlebeforeEnter" @enter="handleEnter" >
+				<slot v-if="show"></slot>
+    		</transition>`,
+    methods:{
+        handlebeforeEnter(el){
+            el.style.color='red'
+        },
+        handleClick(){
+            this.show=!this.show
+        	}
+    	}
+    })
+ 
+</script>
+```
+
+
+
+## js实现动画效果
+
+Velocity.js
+
+```html
+入场动画效果
+<transition 
+name="fade" 
+@before-enter="handleBeforeEnter"
+@enter="handleEnter"
+@after-enter="handleEnter"	done执行完调用这个函数
+></transition>
+出场动画效果
+<transition 
+name="fade" 
+@before-leave="handleBeforeLeave"
+@leave="handleLeave"
+@after-leave="handleLeave"	done执行完调用这个函数
+></transition>
+<script>
+handleBeforeEnter:function(el){  	//el：动画包裹的div标签
+    console.log('beforeEnter')
+    el.style.color='red'
+}
+handleEnter(el,done){
+    el.style.color="green"
+      done()						//当函数执行完后手动调用done函数，告诉动画已经执行完了
+}
+</script>
+```
+
+
 
 # 24 Vue的属性和生命周期
 
@@ -1001,3 +1200,340 @@ npm install html-webpack-plugin -D
 ```
 
 7.node用require,js用import
+
+
+
+# 开发去哪儿网
+
+## 3 
+
+## 3.5 计算属性
+
+2021/06/15
+
+### 1.computed
+
+```js
+data:{
+    firstName:'lai',
+    lastName:'e'
+}
+computed:{
+	fullName:function(){
+		return this.firstName+' '+this.lastName;
+	}
+}
+```
+
+1.内置缓存，依赖值不改变时不执行。（性能最高）
+
+### 2.监听器watch
+
+```js
+watch:{
+	firstName:function(){
+		return this.firstName+' '+this.lastName;
+	},
+	lastName:function(){
+		return this.firstName+' '+this.lastName;
+	}
+}
+```
+
+### 3.getter和setter
+
+```js
+computed:{
+	get:function(){
+		return this.firstName+' '+this.lastName;
+	},
+	set:function(value){
+		console.log(value);
+		var arr=value.split(" ")
+		this.firstName=arr[0];
+		this.lastName=arr[1];	//vm.fullName("nike Wang") 全部都会发生变化
+	}
+}
+```
+
+1.通过设置一个值去改变全部的值，又引起computed的重新计算。
+
+## 3.6 样式绑定
+
+### 1.使用class改变样式
+
+#### 3.6.1 class的对象绑定
+
+```vue
+<li :class="{activated:isActivated}" @click="handleDivClick"></li>
+```
+
+```js
+data:{
+	isActivated:false
+},methods:{
+	handleDivClick(){
+		this.isActivated = !this.isActivated
+	}
+}
+```
+
+```css
+.activated:{
+    color:red;
+}
+```
+
+#### 3.6.2 class的数组 
+
+```html
+<li :class="[activated]" @click="handleDivClick"></li>
+```
+
+```js
+data:{
+	activated:''
+},methods:{
+	handleDivClick(){
+		this.activated = this.activated === ""?"activated":""
+	}
+}
+```
+
+### 2.使用style改变样式
+
+```html
+<div :style="styleObj">		//:style="[styleObj,{fontSize:'20px'}]"
+    hello world
+</div>
+
+data:{
+	styleObj:{
+		color:"balck"
+	}
+}
+```
+
+也可以挂载多个对象（数组
+
+## 3.8 key
+
+```html
+<div v-for="(item,index) of list" :key="item.id">	
+    item.id是后端返回值来的唯一标识，这样可以使性能最高，key就不需要:key="index"降低性能
+</div>
+```
+
+1.只能使用 push pop shift unshift splice sort reverse去操作数组，仅改变下标时数据变了页面不会跟着变。
+
+2.改变引用地址
+
+<template> 模板占位符（帮助我们包裹元素，并不会放在 界面上）
+
+3.使用vue.set方法
+
+```js
+Vue.set( target, propertyName/index, value )
+-----------------------------------------------------
+ex:
+Vue.set(vm.userInfo,"address","beijing")
+
+vm.$set(vm.userInfo,"address","beijing")
+```
+
+## 4.4 给组件绑定原生事件
+
+1.在组件中@click绑定的是自定义事件，子组件中绑定的@click是原生事件
+
+2.就想监听原生事件
+
+```html
+<child @click.native="handleClick"></child>
+```
+
+## 4.5 非父子组件中的传值
+
+父子组件19.3
+
+```js
+vue.prototype.$on("change",{
+    function(){
+        
+    }
+})
+```
+
+4.6 插槽
+
+## 4.7 作用域插槽
+
+```html
+<child>
+    
+</child>
+```
+
+4.9 动态组件
+
+```html
+<component :is="type"></component>
+
+data:type:child-one
+methods 改变data中type的值
+```
+
+v-once 放在内存里，性能更高（提高静态内容的展示效率
+
+## 第六章
+
+### 1.环境配置
+
+1.1下载node
+
+​		终端工具
+
+```
+node -v  //版本号
+npm -v	//安装工具
+```
+
+1.2码云
+
+个人主页-private-创建项目 MIT
+
+1.3通过git进行关联		安装好git
+
+终端
+
+```
+git --version
+```
+
+1.4 git-bash（小型的linux操作系统）
+
+1.右上角-我的主页-ssh公钥，复制代码
+
+2.在git-bash里粘贴代码，将邮箱改成自己的邮箱	回车，生成公钥和私钥
+
+3.git-bash代码里粘贴第二个复制的代码，生成公钥
+
+4.公钥，回到码云，点击ssh公钥界面复制进去
+
+5.将线上的项目克隆到本地，以ssh协议复制后git clone xxx
+
+6.创建vue-cli项目
+
+### 3.单文件组件与路由
+
+### 4.单页面应用，多页面应用
+
+##### 1.多页应用
+
+1.1页面跳转，返回html
+
+- ​	优点：首屏时间快（只经历了一个http请求过程，SEO效果好（搜索引擎可以识别html的
+- 缺点：页面切换慢，会有卡顿。
+
+##### 2.单页应用
+
+```html
+<router-link to="/list">列表页</router-link>		和a标签差不多
+```
+
+vue写的都是单页面，js感知到url变化，将这个清除掉再显示新的组件
+
+2.1页面跳转，JS渲染
+
+- 优点：页面切换快
+- 缺点：首屏时间慢，SEO差
+- 解决：服务器端渲染
+
+### 5 项目代码初始化
+
+#### 1.在网上下载reset.css
+
+1.1assets-styles-reset.css 基础样式修饰，保证每一个浏览器样式一致。
+
+1.2在main.js里面引入
+
+```
+import './assets/styles/reset.css'
+```
+
+#### 2.border.css
+
+一像素边框的问题。
+
+2.1 border.css 放在reset.css同一个目录下
+
+（scale的像素实现
+
+#### 3.fastClick
+
+300ms点击延迟问题
+
+1.使用fastclick的库
+
+```
+npm install fastclick --save
+```
+
+2.在主文件main.js 里面引用
+
+```
+import attachFastClick from 'fastclick' //引用该组件的目的是为了解决移动端300ms延迟的问题
+
+attachFastClick.attach(document.body);	//激活组件
+```
+
+#### 4.iconfont
+
+图标管理-我的项目-右侧加号创建项目。
+
+5.无用代码删除
+
+lang
+
+## 7.8
+
+1.只有把静态的界面放在static目录下才能去访问。
+
+static-mock-index.json
+
+2..gitgnore  加static/mock  则不会被加到线上的仓库里  **不会被提交到仓库之中**
+
+3.在config-index.js下的-proxyTable
+
+```js
+ dev: {
+    // Paths webpack-dev-serve 改动配置项文件的时候需重启
+    assetsSubDirectory: 'static',
+    assetsPublicPath: '/',
+    proxyTable: {
+      '/api': {
+        target: 'http://localhost:8080',
+        pathRewrite: {
+          '^/api': '/static/mock'
+        }
+      }
+    },
+```
+
+4.改动配置项文件的时候需要重启服务器
+
+App.vue
+
+```html
+<template>
+  <div id="app">
+    <router-view/>
+  </div>
+</template>
+```
+
+@符号指的是src下的目录
+
+sourceTree切换分支：检出分支
+
+## 8.1
+

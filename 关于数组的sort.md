@@ -1,5 +1,26 @@
 ## Array所有属性与方法（分类）
 
+##### Object.assign(target,...source);
+
+方法用于将所有可枚举属性的值从一个或多个源对象分配到目标对象
+
+！注：如果目标对象与源对象有同名属性，或多个源对象有同名属性，则后面的属性会覆盖前面的属性。
+
+```js
+const target = { a: 1, b: 2 };
+const source = { b: 4, c: 5 };
+
+const returnedTarget = Object.assign({},target, source);
+console.log(returnedTarget);
+// expected output: Object { a: 1, b: 4, c: 5 }
+
+const returnedTarget = Object.assign(target, source);
+console.log(target);
+// expected output: Object { a: 1, b: 4, c: 5 }
+console.log(returnedTarget);
+// expected output: Object { a: 1, b: 4, c: 5 }
+```
+
 ## 总结
 
 ##### 迭代 （item,index,array)
@@ -7,6 +28,8 @@
 some	boolean
 
 every	boolean
+
+
 
 filter	新数组
 

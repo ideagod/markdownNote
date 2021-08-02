@@ -28,6 +28,28 @@
         var quchong = new unique();
 ```
 
+```js
+		function unique(arr){
+			let a=[];
+			for(var i=0;i<arr.length;i++){
+				if(a.indexOf(arr[i])==-1)
+					a.push(arr[i])
+			}
+			return a;
+		}
+		function unique1(arr){
+			arr=arr.sort();
+			var a=[],temp;
+			for(var i=0;i<arr.length;i++){
+				if(arr[i]!=temp){
+					temp=arr[i]
+					a.push(temp)
+				}
+			}
+			return a;
+		}
+```
+
 ## 排序
 
 ```js

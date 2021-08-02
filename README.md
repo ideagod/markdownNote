@@ -72,6 +72,10 @@
 -  [爬虫.md](爬虫.md) 
 
    > 爬虫案例
+   
+-  [python.md](python.md) 
+
+   > 初入门python
 
 ## 组件
 
@@ -91,4 +95,10 @@
 
 -  [毕设.md](毕设.md) 
 
-  	>毕设使用vue-cli3+mongodb+node.js+webpack
+    	>毕设使用vue-cli3+mongodb+node.js+webpack
+
+## 平日总结
+
+- [uni-app开发小程序.md](uni-app开发小程序.md)
+
+  > 使用uni-app初次开发小程序的步骤
