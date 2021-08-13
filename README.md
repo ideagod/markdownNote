@@ -15,19 +15,15 @@
 
 -  [Vue.md](Vue.md) 
 
-    > Vue基础课程笔记
+    > Vue基础课程笔记，uni-app运行微信小程序项目
 
 -  [Node.md](Node.md) 
 
-   > Node基础课程笔记,包含搭建方法,cmder软件的使用,npm
+   > Node基础课程笔记,包含搭建方法,cmder软件的使用,npm，express框架
 
 -  [webpack.md](webpack.md) 
 
-   > webpack使用及其配置,loader插件,plugin
-
--  [webpack简单搭建.md](webpack简单搭建.md) 
-
-   > webpack简单搭建以及node.js介绍
+   > webpack简单搭建以及node.js介绍，webpack使用及其配置,loader插件,plugin
 
 -  [typescript.md](typescript.md) 
 
@@ -67,15 +63,11 @@
 
 -  [git命令.md](git命令.md) 
 
-   > git上传代码步骤
+   > git上传代码步骤，git克隆公司项目，基础项目与本地存储挂钩
 
 -  [爬虫.md](爬虫.md) 
 
    > 爬虫案例
-   
--  [python.md](python.md) 
-
-   > 初入门python
 
 ## 组件
 
@@ -99,6 +91,7 @@
 
 ## 平日总结
 
-- [uni-app开发小程序.md](uni-app开发小程序.md)
+- [Vue.md](Vue.md) 下半部分
 
-  > 使用uni-app初次开发小程序的步骤
+  > 使用uni-app初次开发小程序的步骤，以及遇到的问题和解决办法。
+

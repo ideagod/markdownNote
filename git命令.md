@@ -141,7 +141,7 @@ git clone +ssh地址
 2.使用http拉，不同局域网要改局域网地址
 
 ```
-http://改成域网地址/root/activitycenter.git
+http://改成链接上的域网地址/root/activitycenter.git
 ```
 
 拉下来后倒入hbuilderX，然后
@@ -166,3 +166,6 @@ npm install vue -g
 
 2.1但是uni-app不能用到微信小程序的样式，得自己调
 
+# 如何将基础项目与本地存储挂钩
+
+git clone下去，然后用sourceTree挂钩既可 
