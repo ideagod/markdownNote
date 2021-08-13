@@ -7,7 +7,7 @@
 
     > js原生课程笔记(1)
 
--   [46 class语法.md](46 class语法.md) 
+-   [N46 class语法.md](N46 class语法.md) 
 
     > js原生课程笔记(2)
 
