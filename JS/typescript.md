@@ -110,6 +110,8 @@ console.log(color);	//{ '0': 'x', '1': 'y', '2': 'z', x: 0, y: 1, z: 2 }	值-名
 
 ### 3.任意类型any
 
+这些值可能来自于**动态的内容**，比如来自**用户输入或第三方代码库**。 这种情况下，我们**不**希望类型检查器对这些值进行检查而是直接让它们通过编译阶段的检查。
+
 1.创建变量不赋值和赋undefined都是any数据类型.你可以不赋值或者赋值任意类型.
 
 ```typescript
@@ -146,12 +148,37 @@ function sayName(name:string):never{	//一般用在函数返回值上.
 
 ### 6.类型断言
 
-只是告诉编译器一定是这个类型.
+只是告诉编译器一定是这个类型.其一是“尖括号”语法：
 
 ```ts
-let s:any=123;
-let len:number=(<string>s).length
+let s: any = 123;
+let len: number = (<string>s).length
 ```
+
+另一个为`as`语法：
+
+```ts
+let someValue: any = "this is a string";
+let strLength: number = (someValue as string).length;
+```
+
+### 7.数组
+
+ 第一种，可以在元素类型后面接上`[]`，表示由此类型元素组成的一个数组：
+
+```js
+let list: number[] = [1, 2, 3];
+```
+
+第二种方式是使用数组泛型，`Array<元素类型>`：
+
+```js
+let list: Array<number> = [1, 2, 3];
+```
+
+
+
+### 8.
 
 # 3.接口
 

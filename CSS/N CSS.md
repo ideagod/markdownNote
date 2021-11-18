@@ -673,3 +673,147 @@ user-scalable=no	不允许缩放
 ```
 
 ​    background-image: linear-gradient(to bottom, #f5b461 0%, #9ad3bc 100%);
+
+
+
+
+
+
+
+
+
+
+
+## canvas
+
+1.没有 src 和 alt，只有两个属性**——** width,height
+
+2.需要结束标签，无则bug
+
+3.开始空白，找渲染上下文后绘制（getContext() 获取渲染上下文和绘画功能，接受一个参数上下文类型
+
+```js
+var canvas = document.getElementById('tutorial');
+var ctx = canvas.getContext('2d');
+```
+
+DOM对象后getContext()
+
+4.检查支持性
+
+```js
+var canvas = document.getElementById("testCanvas");
+if(canvas.getContext){
+	var ctx = canvas.getContext('2d')
+}else{
+	//不支持替换
+}
+```
+
+### 5.绘制矩形(左上开始)
+
+[`fillRect(x, y, width, height)`](https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D/fillRect)
+
+绘制一个填充的矩形
+
+[`strokeRect(x, y, width, height)`](https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D/strokeRect)
+
+绘制一个矩形的边框
+
+[`clearRect(x, y, width, height)`](https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D/clearRect)
+
+清除指定矩形区域，让清除部分完全透明
+
+### 6.绘制路径
+
+```
+beginPath()
+```
+
+新建一条路径，生成之后，图形绘制命令被指向到路径上生成路径。
+
+```
+closePath()
+```
+
+闭合路径之后图形绘制命令又重新指向到上下文中。
+
+```
+stroke()
+```
+
+通过线条来绘制图形轮廓。
+
+```
+fill()
+```
+
+通过填充路径的内容区域生成实心的图形。
+
+beginPath(),moveTo(x,y),moveTo(),fill()  此时就不需要closePath()
+
+### 7.移动笔触
+
+moveTo（x,y)
+
+### 8.线   lineTo(x,y)
+
+```html
+<html>
+ <head>
+  <script type="application/javascript">
+    function draw() {
+   var canvas = document.getElementById('canvas');
+  if (canvas.getContext) {
+    var ctx = canvas.getContext('2d');
+
+    // 描边三角形
+  ctx.beginPath();
+  ctx.moveTo(125, 125);
+  ctx.lineTo(125, 45);
+  ctx.lineTo(45, 125);
+  ctx.closePath();
+  ctx.stroke();
+  }
+}
+  </script>
+ </head>
+ <body onload="draw();">
+   <canvas id="canvas" width="300px" height="300px"></canvas>
+ </body>
+</html>
+
+```
+
+lineTo()需要closePath()
+
+### 9.圆弧
+
+[`arc(x, y, radius, startAngle, endAngle, anticlockwise)`](https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D/arc)
+
+画一个以（x,y）为圆心的以radius为半径的圆弧（圆），从startAngle开始到endAngle结束，按照anticlockwise给定的方向（默认为顺时针）来生成。
+
+[`arcTo(x1, y1, x2, y2, radius)`](https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D/arcTo)
+
+根据给定的控制点和半径画一段圆弧，再以直线连接两个控制点。
+
+10.Path2D
+
+```js
+ var ctx = canvas.getContext('2d');
+
+    var rectangle = new Path2D();
+    rectangle.rect(50, 50, 500, 500);
+  ctx.stroke(rectangle);
+```
+
+11.colors 
+
+[`fillStyle = color`](https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D/fillStyle)
+
+设置图形的填充颜色。
+
+[`strokeStyle = color`](https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D/strokeStyle)
+
+设置图形轮廓的颜色。
+

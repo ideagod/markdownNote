@@ -260,3 +260,11 @@ git clone下去，然后用sourceTree挂钩既可
 git checkout .
 ```
 
+git 获取远端，创建本地分支
+
+```cmd
+git fetch //融合远端和本地分支
+git branch -a //查看全部分支
+git checkout -b 本地分支名 origin/远程分支名 //远程分支切到本地分支
+```
+
