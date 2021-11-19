@@ -287,3 +287,169 @@ Process exited after 0.3002 seconds with return value 0
 
 2021-11-18
 
+135 在背调函数中改主调函数的值
+
+```c
+#include<stdio.h>
+/*
+	数组没有特殊结束的标记 
+*/
+
+void printfInt(int *p){		//数组元素的个数，数组名 
+	*p = 10 ;
+}
+
+int main(void) {
+	int a = 5;
+	printfInt(&a); 
+	printf("%d",a);
+	return 0;
+}
+
+/*
+10
+--------------------------------
+Process exited after 0.3002 seconds with return value 0
+请按任意键继续. . .
+*/
+```
+
+136  指针变量的运算
+
+- 只能相减
+
+137 指针变量占几个字节
+
+- ```
+  sizeof(变量名)
+  ```
+
+  指针变量都是四个字节
+
+  r指向变量为8个字节，首字节的编号当做x的编号  第一个字节的地址
+
+  32根线，4个字节保存的
+
+  无论内存单元大小都是4个字节存储的
+
+  **一个指针变量，无论他指向的变量占几个字节，改指针变量本身只占四个字节**
+
+  **一个变量 的地址使用该变量首字节的地址来表示**
+
+### 138 动态内存分配
+
+- 动态数组
+  1. 动态数组很好的及解决了传统数组的四个缺陷
+  2. 传统数组也叫静态数组
+
+### 141 malloc函数使用的简单介绍
+
+```c
+#include<stdio.h>
+#include<malloc.h> 
+/*
+	malloc
+*/
+
+
+int main(void) {
+	int i = 5;
+	int *p =(int *)malloc(4);
+	printf("%d \n",p);
+	printf("%d",*p);
+	return 0;
+		/*
+			1.添加头文件 
+			2.只有一个形参，并且是int
+			3.4表示请求系统为我们分配4个字节
+			4.malloc函数只能返回第一个字节的地址 
+			5. 最终分配了8个字节  int * （p变量是四个字节，p指向的内容也是四个字节） 
+				是4个字节，malloc分配四个字节，返回的是第一个字节的地址 
+			
+		*/
+}
+
+/*
+1841648
+1860112
+--------------------------------
+Process exited after 0.344 seconds with return value 0
+请按任意键继续. . .
+*/
+```
+
+143 动态数组的创建
+
+```c
+#include<stdio.h>
+#include<malloc.h> 
+/*
+	动态构造数组 
+*/
+
+
+int main(void) {
+	int a[5];
+	int len;
+	int * pArr;
+	int i;
+	
+	printf("input array len:");
+	scanf("%d",&len);
+	pArr = (int *)malloc(4 * len);
+	
+	for(i =0; i<len ; i++){
+		scanf("%d",&pArr[i]);
+	}
+	
+	printf("content is:");
+		for(i =0; i<len ; i++){
+		printf("%d",pArr[i]);
+	}
+    
+    free(pArr);	//释放掉动态数组，程序可以继续执行，并且可以释放掉，静态不能释放
+}
+
+/*
+input array len:3
+1
+2
+3
+content is:123
+--------------------------------
+Process exited after 7.316 seconds with return value 0
+请按任意键继续. . .
+*/
+```
+
+144 动态内存与静态内存的比较
+
+栈，堆 动态内存在堆分配的
+
+145 多级指针
+
+```c
+#include<stdio.h>
+#include<malloc.h> 
+/*
+	多级指针 
+*/
+
+
+int main(void) {
+
+	int i = 10;
+	int * p = &i;
+	int ** q = &p;
+	int *** r = &q; 
+	printf("%d",***r);
+}
+
+/*
+10
+--------------------------------
+Process exited after 7.316 seconds with return value 0
+请按任意键继续. . .
+*/
+```
+
