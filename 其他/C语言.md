@@ -378,7 +378,7 @@ Process exited after 0.344 seconds with return value 0
 */
 ```
 
-143 动态数组的创建
+### 143 动态数组的创建
 
 ```c
 #include<stdio.h>
@@ -452,4 +452,61 @@ Process exited after 7.316 seconds with return value 0
 请按任意键继续. . .
 */
 ```
+
+### 149 动态内存可以跨函数使用
+
+```c
+#include<stdio.h>
+#include<malloc.h> 
+/*
+	多级指针 
+*/
+void f (int ** q){
+	*q = (int *)malloc(sizeof(int));
+	
+	**q = 5;
+}
+
+int main(void) {
+
+	int *p ;
+	f(&p);
+	printf("%d",*p );
+	
+	return 0;
+}
+
+/*
+5
+--------------------------------
+Process exited after 7.316 seconds with return value 0
+请按任意键继续. . .
+*/
+```
+
+### 151 结构体
+
+```c
+#include<stdio.h>
+/*
+	结构体 
+*/
+
+struct Student {
+	int age ;
+	char sex;
+};
+
+int main(void) {
+	struct Students st = {80,'F'};
+	printf("%d  %c\n",st.age,st.sex); 
+	
+	return 0;
+}
+// 80  F
+```
+
+### 155 如何取出变量
+
+(*pst).age  ===  pst->age === pst.age
 
